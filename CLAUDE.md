@@ -22,7 +22,7 @@ backend/
 ├── app.js                     # Express entry point
 ├── src/
 │   ├── routes/
-│   │   └── chat.js            # POST /api/chat, POST /api/ingest
+│   │   └── chat.js            # POST /api/chat (rate-limited), GET /api/health — no public ingest endpoint; ingest via scripts/ingest.js
 │   ├── controllers/
 │   │   └── chatController.js  # RAG pipeline logic
 │   └── services/
