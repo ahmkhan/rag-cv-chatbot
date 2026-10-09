@@ -43,7 +43,12 @@ frontend/
 2. **Query:** User question → embed → search Pinecone → top 3 chunks → Gemini → answer
 
 ## Deployment
-- TBD (likely Render.com — same as AI Dev Assistant)
+- **Live API:** https://rag-cv-chatbot.onrender.com (Render free web service, auto-deploys on push to `main`)
+- Render settings: Root Directory `backend`, Build `npm install`, Start `npm start`
+- Render env vars: `GEMINI_API_KEY`, `PINECONE_API_KEY`, `ALLOWED_ORIGINS=https://ahmkhan.github.io`, `NODE_ENV=production` (PORT is set by Render)
+- Free tier sleeps after ~15 min idle; the widget pings `/api/health` when opened and shows a "waking up" message after 10 s
+- Widget is embedded in the portfolio via a loader in `my-portfolio/src/index.html` (`https://rag-cv-chatbot.onrender.com/widget.js`)
+- Re-ingest the CV (after CV changes): run `npm run ingest` locally — there is no public ingest endpoint
 
 ## Guidelines for AI Agents
 - All RAG logic lives in `backend/src/services/`
