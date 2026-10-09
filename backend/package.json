@@ -1,9 +1,14 @@
 {
-  "name": "backend",
+  "name": "rag-cv-chatbot-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "ingest": "node scripts/ingest.js",
+    "ask": "node scripts/ask.js"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "keywords": [],
   "author": "",

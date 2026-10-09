@@ -170,10 +170,20 @@
     return div;
   }
 
+  // Free hosting puts the server to sleep when idle; waking it can take 30-60 seconds.
+  // So the first time the chat is opened, we quietly ping the server to start waking it
+  // while the visitor reads the welcome message and types.
+  var warmedUp = false;
+  function warmUp() {
+    if (warmedUp) return;
+    warmedUp = true;
+    fetch(apiBase + '/api/health').catch(function () { /* ignore: only a wake-up call */ });
+  }
+
   function setOpen(open) {
     panel.classList.toggle('open', open);
     bubble.setAttribute('aria-expanded', String(open));
-    if (open) input.focus();
+    if (open) { warmUp(); input.focus(); }
   }
 
   // ---------- Talking to the API ----------
@@ -190,6 +200,10 @@
     typing.textContent = 'Typing…';
     messages.appendChild(typing);
     messages.scrollTop = messages.scrollHeight;
+    // If the server was asleep, be honest about the wait instead of looking frozen.
+    var slowTimer = setTimeout(function () {
+      typing.textContent = 'Waking up the assistant, this can take up to a minute…';
+    }, 10000);
 
     fetch(apiBase + '/api/chat', {
       method: 'POST',
@@ -209,6 +223,7 @@
         addMessage('error', 'Could not reach the assistant. Please check your connection and try again.');
       })
       .finally(function () {
+        clearTimeout(slowTimer);
         busy = false;
         sendBtn.disabled = false;
         input.focus();
